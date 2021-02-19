@@ -134,7 +134,7 @@ export default {
           definition.isClicked = false;
           return similarity >= minSimilarity;
         })
-        .sort((a, b) => (a.descSimilarity < b.descSimilarity ? 1 : -1));
+        .sort((a, b) => (a.similarity < b.similarity ? 1 : -1));
     },
   },
   watch: {

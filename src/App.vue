@@ -13,7 +13,7 @@
 
           <v-toolbar-items>
             <v-btn text @click="goToAbout">
-              פרטים
+              מדריך שימוש
             </v-btn>
             <v-btn text @click="goToSearch">
               חיפוש
