@@ -93,20 +93,9 @@ export default {
       showTooltip: true,
     };
   },
-  mounted() {
-    if (!JSON.parse(localStorage.getItem('searchItem'))) {
-      console.log('111', JSON.parse(localStorage.getItem('searchItem')));
-    } else {
-      this.dummySearchInput = JSON.parse(localStorage.getItem('searchItem'));
-      this.searchInput = this.dummySearchInput;
-      this.noInput = false;
-      console.log('222', JSON.parse(localStorage.getItem('searchItem')));
-    }
-  },
   methods: {
     search() {
       this.searchInput = this.dummySearchInput;
-      localStorage.setItem('searchItem', JSON.stringify(this.searchInput));
       this.noInput = false;
     },
     cardClicked(def) {
