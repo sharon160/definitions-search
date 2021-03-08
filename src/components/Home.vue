@@ -19,7 +19,19 @@
     </h2>
     <h2>באתר תוכלו לחפש הגדרה בקלות וביעילות.</h2>
     <br />
-    <v-btn to="/about" color="primary">למדריך שימוש באתר לחצו כאן</v-btn>
+    <v-layout row wrap justify-center>
+      <v-flex md2>
+        <v-btn to="/about" color="primary">למדריך שימוש באתר לחצו כאן</v-btn>
+      </v-flex>
+      <v-flex md3>
+        <v-btn
+          href="https://github.com/sharon160/definitions-search"
+          color="primary"
+          >קישור ל-github
+          <v-icon class="pr-2">mdi-github</v-icon>
+        </v-btn>
+      </v-flex>
+    </v-layout>
     <br />
 
     <v-img
@@ -37,6 +49,9 @@ export default {
 
   data() {
     return {};
+  },
+  mounted() {
+    localStorage.clear();
   },
 };
 </script>

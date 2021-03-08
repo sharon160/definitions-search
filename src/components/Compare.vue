@@ -4,24 +4,36 @@
     <v-layout row wrap>
       <v-flex md6>
         <v-card class="ml-10 mt-10" style="background-color: #CAE4FF">
-          <v-card-title
+          <p
+            style="font-family: 'Assistant', sans-serif; font-size: 20px"
+            class="justify-center"
+          >
+            <b>שם ההגדרה: </b> {{ selected[0].Definition }}
+          </p>
+          <span
             style="font-family: 'Assistant', sans-serif; font-size: 15px"
             class="justify-center"
           >
-            {{ selected[0].Law }}
-          </v-card-title>
+            <b>שם החוק: </b> {{ selected[0].Law }}
+          </span>
           <v-card-text style="font-size: 30px; line-height: 1.5" id="display1">
           </v-card-text>
         </v-card>
       </v-flex>
       <v-flex md6>
         <v-card class="ml-10 mt-10" style="background-color: #CAE4FF">
-          <v-card-title
+          <p
+            style="font-family: 'Assistant', sans-serif; font-size: 20px"
+            class="justify-center"
+          >
+            <b>שם ההגדרה: </b> {{ selected[1].Definition }}
+          </p>
+          <span
             style="font-family: 'Assistant', sans-serif; font-size: 15px"
             class="justify-center"
           >
-            {{ selected[1].Law }}
-          </v-card-title>
+            <b>שם החוק: </b> {{ selected[1].Law }}
+          </span>
           <v-card-text style="font-size: 30px; line-height: 1.5" id="display2">
           </v-card-text>
         </v-card>

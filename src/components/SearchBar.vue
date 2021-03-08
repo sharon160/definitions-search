@@ -27,16 +27,33 @@
       >להשוואה</v-btn
     >
     <h2 v-if="filteredDefinitions.length === 0 && !noInput">אין הגדרה כזו</h2>
+    <h3 v-if="filteredDefinitions.length > 0 && !noInput">
+      נמצאו {{ filteredDefinitions.length }} הגדרות שמתאימות לערך שחיפשת
+    </h3>
     <v-list v-if="!noInput">
       <v-card
         :color="def.color"
-        dark
+        :dark="!def.brightBackground"
         v-for="def in filteredDefinitions"
         :key="def.Definition + Math.random()"
         class="mb-10"
         :class="{ active: def.isClicked }"
         @click="cardClicked(def)"
       >
+        <v-tooltip left>
+          <template v-slot:activator="{ on }">
+            <div>
+              <v-icon
+                v-on="on"
+                @click.stop="openLawLink(def.lawLink)"
+                style="float: left"
+                class="pr-2"
+                >mdi-open-in-new</v-icon
+              >
+            </div>
+          </template>
+          <span>קישור לחוק</span>
+        </v-tooltip>
         <v-card-title
           style="font-family: 'Assistant', sans-serif; font-size: 30px"
           class="justify-center"
@@ -61,7 +78,6 @@
 
 <script>
 import { definitions } from '../Definitions';
-// import Dialog from './Dialog';
 const stringSimilarity = require('string-similarity');
 
 export default {
@@ -74,11 +90,23 @@ export default {
       noInput: true,
       searchOptions: 'simple',
       selectedDefinitions: [],
+      showTooltip: true,
     };
+  },
+  mounted() {
+    if (!JSON.parse(localStorage.getItem('searchItem'))) {
+      console.log('111', JSON.parse(localStorage.getItem('searchItem')));
+    } else {
+      this.dummySearchInput = JSON.parse(localStorage.getItem('searchItem'));
+      this.searchInput = this.dummySearchInput;
+      this.noInput = false;
+      console.log('222', JSON.parse(localStorage.getItem('searchItem')));
+    }
   },
   methods: {
     search() {
       this.searchInput = this.dummySearchInput;
+      localStorage.setItem('searchItem', JSON.stringify(this.searchInput));
       this.noInput = false;
     },
     cardClicked(def) {
@@ -107,6 +135,16 @@ export default {
       const randomG = Math.random() * 255;
       const randomB = Math.random() * 255;
       let currDef = this.definitionsList[0];
+      currDef.brightBackground = false;
+      if (
+        (randomR > 130 && randomG > 130) ||
+        (randomR > 130 && randomB > 130) ||
+        (randomG > 130 && randomB > 130) ||
+        (randomR > 130 && randomG > 130 && randomB > 130) ||
+        randomG > 220
+      ) {
+        currDef.brightBackground = true;
+      }
       currDef.color = `rgb(${randomR}, ${randomG}, ${randomB})`;
       const first = this.definitionsList[0];
       return this.definitionsList
@@ -116,9 +154,20 @@ export default {
             const randomR = Math.random() * 255;
             const randomG = Math.random() * 255;
             const randomB = Math.random() * 255;
+            definition.brightBackground = false;
+            if (
+              (randomR > 130 && randomG > 130) ||
+              (randomR > 130 && randomB > 130) ||
+              (randomG > 130 && randomB > 130) ||
+              (randomR > 130 && randomG > 130 && randomB > 130) ||
+              randomG > 220
+            ) {
+              definition.brightBackground = true;
+            }
             currDef = definition;
             definition.color = `rgb(${randomR}, ${randomG}, ${randomB})`;
           } else {
+            definition.brightBackground = currDef.brightBackground;
             definition.color = currDef.color;
           }
           const similarity = stringSimilarity.compareTwoStrings(
@@ -132,9 +181,30 @@ export default {
           definition.similarity = similarity;
           definition.descSimilarity = descSimilarity;
           definition.isClicked = false;
+          if (definition.similarity >= minSimilarity && !definition.lawLink) {
+            let revLaw = definition.Law.split('')
+              .reverse()
+              .join('');
+            if (Number.isInteger(Number(revLaw[0]))) {
+              revLaw = revLaw.slice(5);
+              if (revLaw[1] === ' ') {
+                revLaw = revLaw.slice(2);
+                const index = revLaw.indexOf(' ');
+                revLaw = revLaw.slice(index + 1);
+              }
+            }
+            definition.lawLink = `https://he.wikisource.org/wiki/${revLaw
+              .split('')
+              .reverse()
+              .join('')
+              .replace(/ /g, '_')}`;
+          }
           return similarity >= minSimilarity;
         })
         .sort((a, b) => (a.similarity < b.similarity ? 1 : -1));
+    },
+    openLawLink(lawLink) {
+      window.open(lawLink, '_blank');
     },
   },
   watch: {
